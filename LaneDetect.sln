@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LaneDetect", "LaneDetect\La
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoadConvertor", "RoadConvertor\RoadConvertor.vcxproj", "{80056E47-1B97-4FA2-B117-25872C435A41}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreatePanoTopView", "CreatePanoTopView\CreatePanoTopView.vcxproj", "{CE157B87-142F-43A7-AF57-516DAC432C9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{80056E47-1B97-4FA2-B117-25872C435A41}.Debug|Win32.Build.0 = Debug|Win32
 		{80056E47-1B97-4FA2-B117-25872C435A41}.Release|Win32.ActiveCfg = Release|Win32
 		{80056E47-1B97-4FA2-B117-25872C435A41}.Release|Win32.Build.0 = Release|Win32
+		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Debug|Win32.Build.0 = Debug|Win32
+		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Release|Win32.ActiveCfg = Release|Win32
+		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
