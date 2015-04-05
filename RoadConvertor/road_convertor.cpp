@@ -1,6 +1,7 @@
 ﻿#include "road_convertor.h"
 
 namespace stcv {
+namespace road_cvtor {
 RoadConvertor::RoadConvertor() {
     _p_road_to_pano = NULL;
 }
@@ -15,7 +16,7 @@ RoadConvertor::RoadConvertor(float camera_height, float heading, float pitch, fl
 }
 
 RoadConvertor::~RoadConvertor() {
-    delete [] _p_road_to_pano;
+    delete[] _p_road_to_pano;
     _p_road_to_pano = NULL;
 }
 
@@ -43,7 +44,7 @@ void RoadConvertor::init(float camera_height, float heading, float pitch, float 
     _dst_image_width = static_cast<int>(ceil(_dst_width_meters * _pixels_per_meter));
     _dst_image_height = static_cast<int>(ceil(_dst_height_meters * _pixels_per_meter));
 
-    delete [] _p_road_to_pano;
+    delete[] _p_road_to_pano;
     _p_road_to_pano = NULL;
 }
 
@@ -107,7 +108,7 @@ int RoadConvertor::create_road_topview(const cv::Mat& src_img, cv::Mat* p_dst_im
     return ROADCVTOR_OK;
 }
 
-int RoadConvertor::pts_pano_to_road(const int& pano_width, const int& pano_height, 
+int RoadConvertor::pts_pano_to_road(const int& pano_width, const int& pano_height,
     const std::vector<cv::Point2i>& pano_pts,
     std::vector<cv::Point2i>* p_road_pts) {
     if (pano_pts.size() > 0) {
@@ -145,11 +146,11 @@ int RoadConvertor::pts_road_to_pano(const int& pano_width, const int& pano_heigh
     return ROADCVTOR_OK;
 }
 
-int RoadConvertor::road_to_pano(const int& pano_width, const int& pano_height, 
+int RoadConvertor::road_to_pano(const int& pano_width, const int& pano_height,
     const cv::Point2i& road_pt, cv::Point2f* p_pano_pt) {
     int dst_width = dst_image_width();
     int dst_height = dst_image_height();
-    if (road_pt.x < 0 || road_pt.x >= dst_width 
+    if (road_pt.x < 0 || road_pt.x >= dst_width
         || road_pt.y < 0 || road_pt.y >= dst_height) {
         return ROADCVTOR_INPUT_PARAM_ERROR;
     }
@@ -467,5 +468,5 @@ int RoadConvertor::plane_inverse_transfrom(const float& device_height_pixels, co
 
     return ROADCVTOR_OK;
 }
-}
-
+} // namespace road_cvtor
+} // namespace stcv

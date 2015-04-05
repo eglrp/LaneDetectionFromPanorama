@@ -18,9 +18,15 @@
     <ClCompile Include="road_convertor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="batch_convertor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="road_convertor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="batch_convertor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

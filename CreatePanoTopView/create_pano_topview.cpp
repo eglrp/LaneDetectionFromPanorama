@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "../RoadConvertor/road_convertor.h"
+#include "../RoadConvertor/batch_convertor.h"
 
 void printUsage(void) {
     std::cout << "create_pano_topview --config config.txt --basedir /home/pic_demo \
---list list.txt --pixels_per_meter 50 --output /home/output" << std::endl;
+--list list.txt --pixels_per_meter 50 --dst_width_meters 50 --dst_length_meters 160 \
+--output /home/output" << std::endl;
 }
 
 int main(int argc, char** argv) {
@@ -14,6 +15,8 @@ int main(int argc, char** argv) {
     std::string output;
     std::string config_name;
     int pixels_per_meter = 50;
+    float dst_width_meters = 50.0f;
+    float dst_length_meters = 160.0f;
     for (int i = 1; i < argc; i++) {
         if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "/?") {
             printUsage();
@@ -39,6 +42,14 @@ int main(int argc, char** argv) {
             pixels_per_meter = atoi(argv[i + 1]);
             i++;
         }
+        else if (std::string(argv[i]) == "--dst_width_meters") {
+            dst_width_meters = atof(argv[i + 1]);
+            i++;
+        }
+        else if (std::string(argv[i]) == "--dst_length_meters") {
+            dst_length_meters = atof(argv[i + 1]);
+            i++;
+        }
     }
 
     if (basedir.empty() || output.empty() || list.empty() || config_name.empty()) {
@@ -57,32 +68,33 @@ int main(int argc, char** argv) {
     std::cout << "----------------------panorama to topview----------------------" << std::endl;
     std::cout << "---------------------------------------------------------------" << std::endl;
 
-    float camera_height = 0.0f;
-    float heading = 0.0f;
-    float pitch = 0.0f;
-    float pitch_back = 0.0f;
-    float roll = 0.0f;
-    float dst_height_meters = 0.0f;
-    float dst_width_meters = 0.0f;
+    std::map<std::string, stcv::road_cvtor::RoadCvtParm> road_cvt_parm;
     std::ifstream config_file(config_name.c_str());
     if (config_file.good()) {
-        config_file >> camera_height;
-        config_file >> heading;
-        config_file >> pitch;
-        config_file >> pitch_back;
-        config_file >> roll;
-        config_file >> dst_height_meters;
-        config_file >> dst_width_meters;
-        config_file.close();
+        std::string batch;
+        while (config_file >> batch) {
+            if (batch.empty()) {
+                break;
+            }
 
-        std::cout << "camera height: " << camera_height << std::endl;
-        std::cout << "heading: " << heading << std::endl;
-        std::cout << "pitch: " << pitch << std::endl;
-        std::cout << "pitch back: " << pitch_back << std::endl;
-        std::cout << "roll: " << roll << std::endl;
-        std::cout << "pixels per meter: " << pixels_per_meter << std::endl;
-        std::cout << "meters of height: " << dst_height_meters << std::endl;
-        std::cout << "meters of width: " << dst_width_meters << std::endl;
+            float camera_height;
+            float heading;
+            float pitch;
+            float pitch_back;
+
+            config_file >> camera_height;
+            config_file >> heading;
+            config_file >> pitch;
+            config_file >> pitch_back;
+
+            stcv::road_cvtor::RoadCvtParm parm;
+            parm.camera_height = camera_height;
+            parm.heading = heading;
+            parm.pitch = pitch;
+            parm.pitch_back = pitch_back;
+            road_cvt_parm.insert(std::pair<std::string,
+                stcv::road_cvtor::RoadCvtParm>(batch, parm));
+        }
     }
     else {
         std::cout << "can not find config file!" << std::endl;
@@ -91,9 +103,13 @@ int main(int argc, char** argv) {
 
     std::ifstream img_list(list.c_str());
     if (img_list.good()) {
-        //stcv::RoadConvertor road_convertor(1.45f, 270.0f, -0.6f, 0.0f, 50.0f, 30.0f, 80.0f);
-        stcv::RoadConvertor road_convertor(camera_height, heading, pitch, pitch_back, roll,
-            pixels_per_meter, dst_height_meters, dst_width_meters);
+        stcv::road_cvtor::BatchConvertor batch_convertor;
+        int ret = batch_convertor.init(road_cvt_parm, pixels_per_meter,
+            dst_width_meters, dst_length_meters);
+        if (ret != stcv::road_cvtor::RoadConvertor::ROADCVTOR_OK) {
+            std::cout << "[ERROR] BatchConvertor init error." << std::endl;
+            return ret;
+        }
         std::string pid;
         while (img_list >> pid) {
             std::cout << pid << std::endl;
@@ -101,12 +117,13 @@ int main(int argc, char** argv) {
             cv::Mat road;
             cv::Mat pano = cv::imread(impath.c_str());
             if (pano.empty()) {
-                std::cout << pid << " can not find image!" << std::endl;
+                std::cout << pid << "[WARN] Can not find image!" << std::endl;
                 continue;
             }
             int64 start = cv::getTickCount();
-            int ret = road_convertor.create_road_topview(pano, &road);
-            if (ret != stcv::RoadConvertor::ROADCVTOR_OK) {
+            std::string prefix = pid.substr(0, 10);
+            ret = batch_convertor.road_cvtor(prefix, pano, &road);
+            if (ret != stcv::road_cvtor::RoadConvertor::ROADCVTOR_OK) {
                 std::cout << pid << " convert faild!" << std::endl;
                 continue;
             }

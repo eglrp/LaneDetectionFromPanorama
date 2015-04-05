@@ -3,8 +3,8 @@
 //
 // 文件功能: 将全景图像中的道路区域转换为正视图。
 //
-#ifndef _ROAD_CONVERTOR_H_
-#define _ROAD_CONVERTOR_H_
+#ifndef STCV_ROAD_CONVERTOR_H
+#define STCV_ROAD_CONVERTOR_H
 
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
     TypeName(const TypeName &); \
@@ -18,7 +18,7 @@
 #include <vector>
 
 namespace stcv {
-
+namespace road_cvtor {
 /// \class  RoadConvertor
 ///
 /// \brief  将全景图中的道路区域转换为正视图.
@@ -168,5 +168,6 @@ private:
 
     DISALLOW_COPY_AND_ASSIGN(RoadConvertor);
 };
+} // namespace road_cvtor
 } // namespace stcv
 #endif
