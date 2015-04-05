@@ -11,7 +11,8 @@ BatchConvertor::~BatchConvertor()
 }
 
 int BatchConvertor::init(const std::map<std::string, RoadCvtParm>& parm_map,
-    const int& pixels_per_meter, const int& road_width_meters, const int& road_length_meters) {
+    const float& pixels_per_meter, const float& road_width_meters,
+    const float& road_length_meters) {
     _parm_map = parm_map;
     _pixels_per_meter = pixels_per_meter;
     _road_width_meters = road_width_meters;

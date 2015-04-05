@@ -19,17 +19,17 @@ public:
     BatchConvertor();
     ~BatchConvertor();
 
-    int init(const std::map<std::string, RoadCvtParm>& parm_map, const int& pixels_per_meter,
-        const int& road_width_meters, const int& road_length_meters);
+    int init(const std::map<std::string, RoadCvtParm>& parm_map, const float& pixels_per_meter,
+        const float& road_width_meters, const float& road_length_meters);
 
     int road_cvtor(const std::string& prefix, const cv::Mat& src_img, cv::Mat* p_dst_img);
 
 private:
     /// \brief  同一批次数据的名字，如20150104TT_1057515，前缀为20150104TT.
     std::string _prefix_name;
-    int _road_width_meters;
-    int _road_length_meters;
-    int _pixels_per_meter;
+    float _road_width_meters;
+    float _road_length_meters;
+    float _pixels_per_meter;
     /// \brief  道路转换类.
     RoadConvertor _road_convertor;
     /// \brief  每批次数据对应的参数.

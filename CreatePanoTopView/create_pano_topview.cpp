@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     std::string list;
     std::string output;
     std::string config_name;
-    int pixels_per_meter = 50;
+    float pixels_per_meter = 50.0f;
     float dst_width_meters = 50.0f;
     float dst_length_meters = 160.0f;
     for (int i = 1; i < argc; i++) {
@@ -39,15 +39,15 @@ int main(int argc, char** argv) {
             i++;
         }
         else if (std::string(argv[i]) == "--pixels_per_meter") {
-            pixels_per_meter = atoi(argv[i + 1]);
+            pixels_per_meter = static_cast<float>(atof(argv[i + 1]));
             i++;
         }
         else if (std::string(argv[i]) == "--dst_width_meters") {
-            dst_width_meters = atof(argv[i + 1]);
+            dst_width_meters = static_cast<float>(atof(argv[i + 1]));
             i++;
         }
         else if (std::string(argv[i]) == "--dst_length_meters") {
-            dst_length_meters = atof(argv[i + 1]);
+            dst_length_meters = static_cast<float>(atof(argv[i + 1]));
             i++;
         }
     }
@@ -117,14 +117,14 @@ int main(int argc, char** argv) {
             cv::Mat road;
             cv::Mat pano = cv::imread(impath.c_str());
             if (pano.empty()) {
-                std::cout << pid << "[WARN] Can not find image!" << std::endl;
+                std::cout << pid << "[WARN] Can not find image, " << impath << std::endl;
                 continue;
             }
             int64 start = cv::getTickCount();
             std::string prefix = pid.substr(0, 10);
             ret = batch_convertor.road_cvtor(prefix, pano, &road);
             if (ret != stcv::road_cvtor::RoadConvertor::ROADCVTOR_OK) {
-                std::cout << pid << " convert faild!" << std::endl;
+                std::cout << pid << "[WARN] Convert faild! " << pid << std::endl;
                 continue;
             }
             int64 end = cv::getTickCount();

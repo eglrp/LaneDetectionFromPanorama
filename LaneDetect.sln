@@ -8,6 +8,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoadConvertor", "RoadConvertor\RoadConvertor.vcxproj", "{80056E47-1B97-4FA2-B117-25872C435A41}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreatePanoTopView", "CreatePanoTopView\CreatePanoTopView.vcxproj", "{CE157B87-142F-43A7-AF57-516DAC432C9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{80056E47-1B97-4FA2-B117-25872C435A41} = {80056E47-1B97-4FA2-B117-25872C435A41}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
