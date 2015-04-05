@@ -33,14 +33,14 @@ int BatchConvertor::road_cvtor(const std::string& prefix, const cv::Mat& src_img
     if (prefix != _prefix_name) {
         std::map<std::string, RoadCvtParm>::iterator itor = _parm_map.find(prefix);
         if (itor == _parm_map.end()) {
-            std::cout << "[ERROR] can not find the parm in _parm_map," << _prefix_name << std::endl;
+            std::cout << "[ERROR] can not find the parm in _parm_map," << prefix << std::endl;
             return RoadConvertor::ROADCVTOR_INPUT_PARAM_ERROR;
         }
 
-        float height = _parm_map[_prefix_name].camera_height;
-        float heading = _parm_map[_prefix_name].heading;
-        float pitch = _parm_map[_prefix_name].pitch;
-        float pitch_back = _parm_map[_prefix_name].pitch_back;
+        float height = _parm_map[prefix].camera_height;
+        float heading = _parm_map[prefix].heading;
+        float pitch = _parm_map[prefix].pitch;
+        float pitch_back = _parm_map[prefix].pitch_back;
         _road_convertor.init(height, heading, pitch, pitch_back, 0, _pixels_per_meter,
             _road_width_meters, _road_length_meters);
         _prefix_name = prefix;

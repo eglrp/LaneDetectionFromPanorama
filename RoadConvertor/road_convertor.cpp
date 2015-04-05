@@ -44,8 +44,10 @@ void RoadConvertor::init(float camera_height, float heading, float pitch, float 
     _dst_image_width = static_cast<int>(ceil(_dst_width_meters * _pixels_per_meter));
     _dst_image_height = static_cast<int>(ceil(_dst_height_meters * _pixels_per_meter));
 
-    delete[] _p_road_to_pano;
-    _p_road_to_pano = NULL;
+    if (_p_road_to_pano != NULL) {
+        delete[] _p_road_to_pano;
+        _p_road_to_pano = NULL;
+    }
 }
 
 int RoadConvertor::create_road_topview(const cv::Mat& src_img, cv::Mat* p_dst_img) {
