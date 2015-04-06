@@ -1,7 +1,7 @@
 // Copyright 2015 Baidu Inc. All Rights Reserved.
 // Author:  Hou Wenbo (houwenbo@baidu.com)
 //
-// 文件功能: 样本json解析及生成。
+// Parse and generate the json file for samples.
 //
 #ifndef _STCV_DATAIO_JSON_IO_H_
 #define _STCV_DATAIO_JSON_IO_H_
@@ -16,7 +16,7 @@ namespace stcv {
 namespace json_io {
 /// \class  JsonIO
 ///
-/// \brief  样本数据json io类.
+/// \brief  Sample data (json) io class.
 ///
 /// \author Houwenbo
 /// \date   2015/3/17
@@ -41,7 +41,7 @@ public:
 
     /// \struct SampleMark
     ///
-    /// \brief  样本的基本信息.
+    /// \brief  Base info of sample.
     ///
     /// \author Houwenbo
     /// \date   2015/3/17
@@ -55,7 +55,7 @@ public:
 
     /// \struct JsonStruct
     ///
-    /// \brief  json内的结构信息，一般为一幅图像内标注的所有样本信息.
+    /// \brief  sample data struct, for one panorama image.
     ///
     /// \author Houwenbo
     /// \date   2015/3/17
@@ -73,7 +73,7 @@ public:
 
     /// \fn static int JsonIO::parse_json(const std::string& json, JsonStruct* p_mark);
     ///
-    /// \brief  解析json文件.
+    /// \brief  parse the json file.
     ///
     /// \author Houwenbo
     /// \date   2015/3/17
@@ -81,12 +81,12 @@ public:
     /// \param  json            The JSON.
     /// \param [in,out] p_mark  If non-null, the mark.
     ///
-    /// \return 成功0，失败非0.
+    /// \return Success 0, Failure < 0.
     static int parse_json(const std::string& json, JsonStruct* p_mark);
 
     /// \fn static int JsonIO::generate_json(const JsonStruct& mark, std::string* p_json);
     ///
-    /// \brief  生成json文件.
+    /// \brief  generate the json file.
     ///
     /// \author Houwenbo
     /// \date   2015/3/17
@@ -94,7 +94,7 @@ public:
     /// \param  mark            The mark.
     /// \param [in,out] p_json  If non-null, the JSON.
     ///
-    /// \return 成功0，失败非0.
+    /// \return Success 0, Failure < 0.
     static int generate_json(const JsonStruct& mark, std::string* p_json);
 private:
 };

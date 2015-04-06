@@ -34,7 +34,7 @@ int JsonIO::parse_json(const std::string& json, JsonStruct* p_mark) {
                 SampleMark sample;
                 sample.pid = pid;
                 sample.type_code = nitem;
-                sample.graph = GraphicType::RECTANGLE;
+                sample.graph = RECTANGLE;
                 sample.pts.push_back(pt1);
                 sample.pts.push_back(pt2);
 
@@ -134,7 +134,7 @@ int JsonIO::generate_json(const JsonStruct& mark, std::string* p_json) {
         item["ITEM"] = mark.sample_marks[i].type_code;
         item["POINT_NUM"] = static_cast<int>(mark.sample_marks[i].pts.size());
         item["TYPE"] = "";
-        if (mark.sample_marks[i].graph == GraphicType::RECTANGLE) {
+        if (mark.sample_marks[i].graph == RECTANGLE) {
             item["SHAPE"] = "RECT";
             if (mark.sample_marks[i].pts.size() != 2) {
                 continue;
@@ -143,7 +143,7 @@ int JsonIO::generate_json(const JsonStruct& mark, std::string* p_json) {
             cv::Point pt1 = mark.sample_marks[i].pts[1];
             item["RECT"] = cv::format("(%d,%d)(%d,%d)", pt0.x, pt0.y, pt1.x, pt1.y).c_str();
         }
-        else if (mark.sample_marks[i].graph == GraphicType::POLYGON) {
+        else if (mark.sample_marks[i].graph == POLYGON) {
             item["SHAPE"] = "POLYGON";
             std::string strpts = "";
             if (mark.sample_marks[i].pts.size() <= 2) {

@@ -1,7 +1,7 @@
 // Copyright 2015 Baidu Inc. All Rights Reserved.
 // Author:  Hou Wenbo (houwenbo@baidu.com)
 //
-// 文件功能: 样本裁剪工具, 裁剪正样本, 裁剪正样本, 填黑生成负样本.
+// Sample cutting tool, cutting positive samples , filling black for negative samples.
 //
 #include <iostream>
 #include <fstream>
@@ -226,7 +226,7 @@ int main(int argc, char** argv) {
         }
         std::string json;
         json_file >> json;
-        if (!json.empty()) {
+        if (json.empty()) {
             std::cout << "[WARN] Json is empty. " << jsonpath << std::endl;
             continue;
         }
@@ -242,8 +242,9 @@ int main(int argc, char** argv) {
             if (mark.sample_marks[m].pts.size() <= 3) {
                 continue;
             }
+            std::string prefix = pid.substr(0, 10);
             std::vector<cv::Point2i> road_pts;
-            ret = batch_convertor.pts_pano_to_road(PANO_HEIGHT, PANO_WIDTH,
+            ret = batch_convertor.pts_pano_to_road(prefix, PANO_WIDTH, PANO_HEIGHT,
                 mark.sample_marks[m].pts, &road_pts);
             if (ret != stcv::road_cvtor::RoadConvertor::ROADCVTOR_OK) {
                 std::cout << "[WARN] RoadConvertor failed." << std::endl;
@@ -269,7 +270,7 @@ int main(int argc, char** argv) {
                 rect.x -= static_cast<int>((rect.height - rect.width) * 0.5);
                 rect.width = rect.height;
             }
-            int expand = 5;
+            int expand = 0.25 * rect.width;
             rect.x -= expand;
             rect.y -= expand;
             rect.width += (expand * 2);
@@ -292,6 +293,17 @@ int main(int argc, char** argv) {
                 continue;
             }
             cv::imwrite(mark_path, road(rect));
+        }
+        if (sample_rect.size() > 0) {
+            for (int s = 0; s < static_cast<int>(sample_rect.size()); ++s) {
+                cv::Rect rect = sample_rect[s];
+                if (rect.x > 0 && rect.x < road.cols && rect.y > 0 && rect.y < road.rows) {
+                    cv::Mat sample = road(rect);
+                    sample = cv::Mat::zeros(sample.size(), sample.type());
+                }
+            }
+            std::string nag_name = ns_path + pid + "_n.jpg";
+            cv::imwrite(nag_name.c_str(), road);
         }
     } // end while
     img_list.close();

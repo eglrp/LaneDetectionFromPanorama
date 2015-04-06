@@ -1,4 +1,9 @@
-﻿#ifndef STCV_BATCH_CONVERTOR
+﻿// Copyright 2015 Baidu Inc. All Rights Reserved.
+// Author:  Hou Wenbo (houwenbo@baidu.com)
+//
+// Convert the road area of panorama to the topview image.
+//
+#ifndef STCV_BATCH_CONVERTOR
 #define STCV_BATCH_CONVERTOR
 #include <map>
 #include <string>
@@ -24,22 +29,23 @@ public:
 
     int road_cvtor(const std::string& prefix, const cv::Mat& src_img, cv::Mat* p_dst_img);
 
-    int pts_pano_to_road(const int& pano_width, const int& pano_height,
+    int pts_pano_to_road(const std::string& prefix, const int& pano_width, const int& pano_height,
         const std::vector<cv::Point2i>& pano_pts,
         std::vector<cv::Point2i>* p_road_pts);
-    int pts_road_to_pano(const int& pano_width, const int& pano_height,
+    int pts_road_to_pano(const std::string& prefix, const int& pano_width, const int& pano_height,
         const std::vector<cv::Point2i>&road_pts,
         std::vector<cv::Point2i>* p_pano_pts);
 
 private:
-    /// \brief  同一批次数据的名字，如20150104TT_1057515，前缀为20150104TT.
+    /// \brief  The name of the same batch of data,
+    ///         eg. 20150104TT_1057515，the prefix is 20150104TT.
     std::string _prefix_name;
     float _road_width_meters;
     float _road_length_meters;
     float _pixels_per_meter;
-    /// \brief  道路转换类.
+    /// \brief  Base class for convert.
     RoadConvertor _road_convertor;
-    /// \brief  每批次数据对应的参数.
+    /// \brief  the parameter for eatch batch.
     std::map<std::string, RoadCvtParm> _parm_map;
 
     DISALLOW_COPY_AND_ASSIGN(BatchConvertor);
