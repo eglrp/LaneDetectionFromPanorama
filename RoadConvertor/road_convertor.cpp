@@ -183,7 +183,7 @@ int RoadConvertor::road_to_pano(const int& pano_width, const int& pano_height,
     float sph_x = static_cast<float>(sin(theta) * cos(phi - heading_));
     float sph_y = static_cast<float>(sin(theta) * sin(phi - heading_));
     float sph_z = static_cast<float>(cos(theta));
-    cv::Mat sph_3d(3, 1, CV_32FC1, cv::Scalar(0));
+    cv::Mat sph_3d(3, 1, CV_32FC1);
     sph_3d.at<float>(0, 0) = sph_x;
     sph_3d.at<float>(1, 0) = sph_y;
     sph_3d.at<float>(2, 0) = sph_z;
