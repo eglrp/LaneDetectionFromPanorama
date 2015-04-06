@@ -12,6 +12,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreatePanoTopView", "Create
 		{80056E47-1B97-4FA2-B117-25872C435A41} = {80056E47-1B97-4FA2-B117-25872C435A41}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonIO", "JsonIO\JsonIO.vcxproj", "{B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CropSamples", "CropSamples\CropSamples.vcxproj", "{FED981C2-E6F0-4E1D-9128-462876D3064B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF} = {B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF}
+		{80056E47-1B97-4FA2-B117-25872C435A41} = {80056E47-1B97-4FA2-B117-25872C435A41}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -30,6 +38,14 @@ Global
 		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Debug|Win32.Build.0 = Debug|Win32
 		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Release|Win32.ActiveCfg = Release|Win32
 		{CE157B87-142F-43A7-AF57-516DAC432C9D}.Release|Win32.Build.0 = Release|Win32
+		{B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF}.Debug|Win32.Build.0 = Debug|Win32
+		{B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF}.Release|Win32.ActiveCfg = Release|Win32
+		{B7AF5736-FCD2-4B34-BBE3-69C3FFAF9EBF}.Release|Win32.Build.0 = Release|Win32
+		{FED981C2-E6F0-4E1D-9128-462876D3064B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FED981C2-E6F0-4E1D-9128-462876D3064B}.Debug|Win32.Build.0 = Debug|Win32
+		{FED981C2-E6F0-4E1D-9128-462876D3064B}.Release|Win32.ActiveCfg = Release|Win32
+		{FED981C2-E6F0-4E1D-9128-462876D3064B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

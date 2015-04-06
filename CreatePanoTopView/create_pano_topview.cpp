@@ -1,3 +1,8 @@
+// Copyright 2015 Baidu Inc. All Rights Reserved.
+// Author:  Hou Wenbo (houwenbo@baidu.com)
+//
+// 文件功能: 将全景图中的道路生成正视图的, 批量转换工具.
+//
 #include <iostream>
 #include <fstream>
 #include <string>

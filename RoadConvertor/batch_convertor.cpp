@@ -48,5 +48,17 @@ int BatchConvertor::road_cvtor(const std::string& prefix, const cv::Mat& src_img
     int ret = _road_convertor.create_road_topview(src_img, p_dst_img);
     return ret;
 }
+
+int BatchConvertor::pts_pano_to_road(const int& pano_width, const int& pano_height,
+    const std::vector<cv::Point2i>& pano_pts,
+    std::vector<cv::Point2i>* p_road_pts) {
+    return _road_convertor.pts_pano_to_road(pano_width, pano_height, pano_pts, p_road_pts);
+}
+
+int BatchConvertor::pts_road_to_pano(const int& pano_width, const int& pano_height,
+    const std::vector<cv::Point2i>&road_pts,
+    std::vector<cv::Point2i>* p_pano_pts) {
+    return _road_convertor.pts_road_to_pano(pano_width, pano_height, road_pts, p_pano_pts);
+}
 } // namespace road_cvtor
 } // namespace stcv

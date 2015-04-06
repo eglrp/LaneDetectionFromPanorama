@@ -24,6 +24,13 @@ public:
 
     int road_cvtor(const std::string& prefix, const cv::Mat& src_img, cv::Mat* p_dst_img);
 
+    int pts_pano_to_road(const int& pano_width, const int& pano_height,
+        const std::vector<cv::Point2i>& pano_pts,
+        std::vector<cv::Point2i>* p_road_pts);
+    int pts_road_to_pano(const int& pano_width, const int& pano_height,
+        const std::vector<cv::Point2i>&road_pts,
+        std::vector<cv::Point2i>* p_pano_pts);
+
 private:
     /// \brief  同一批次数据的名字，如20150104TT_1057515，前缀为20150104TT.
     std::string _prefix_name;
