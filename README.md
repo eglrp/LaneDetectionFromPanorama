@@ -2,6 +2,7 @@
 从全景图像中检测车道及地面的导向标志。
 
 将全景图转换成正视图，然后在正视图上截取样本用于后续adaboost和cnn进行训练检测模型和识别模型。
+
 1. 批量将全景图像转换成正视图
 create_pano_topview --config config.txt --basedir /home/pic_demo --list list.txt --pixels_per_meter 50 --dst_width_meters 50 --dst_length_meters 160 --output /home/output
 --config 配置文件
