@@ -69,7 +69,7 @@ int BatchFile::add_patch(const PatchFile& patch_file) {
     _p_batch_file[index].p_patchs[_p_batch_file[index].patch_num].x = patch_file.x;
     _p_batch_file[index].p_patchs[_p_batch_file[index].patch_num].y = patch_file.y;
     _p_batch_file[index].p_patchs[_p_batch_file[index].patch_num].type = patch_file.type;
-    memcpy(_p_batch_file[index].p_patchs[_p_batch_file[index].patch_num].name, patch_file.data,
+    memcpy(_p_batch_file[index].p_patchs[_p_batch_file[index].patch_num].name, patch_file.name,
         NAME_MAX_LENGTH);
     memcpy(_p_batch_file[index].p_patchs[_p_batch_file[index].patch_num].data, patch_file.data,
         _patch_width * _patch_height * _patch_channels);
@@ -169,10 +169,10 @@ int BatchFile::decode_batch(const std::string& batch_file, std::vector<PatchFile
         read_file.read(reinterpret_cast<char*>(&patch_file.w), sizeof(patch_file.w));
         read_file.read(reinterpret_cast<char*>(&patch_file.h), sizeof(patch_file.h));
         p_patchs->push_back(patch_file);
-#if 0
+#if 1
         cv::Mat debug_img
             = cv::Mat(_patch_height * _patch_channels, _patch_width, CV_8UC1, patch_file.data);
-        cv::imwrite("debug_img.jpg", debug_img);
+        cv::imwrite(patch_file.name, debug_img);
 #endif
     }
     return 0;

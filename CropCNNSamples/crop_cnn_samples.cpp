@@ -214,7 +214,7 @@ int main(int argc, char** argv) {
     }
 
     stcv::Evaluate evaluate(OVERLAP);
-    stcv::BatchFile batch_file(5, 100, SAMPLE_WIDTH, SAMPLE_HEIGHT, 3, ns_path, "test");
+    stcv::BatchFile batch_file(10, 100, SAMPLE_WIDTH, SAMPLE_HEIGHT, 3, ns_path, "test");
     std::string pid;
     while (img_list >> pid) {
         if (pid.empty()) {
