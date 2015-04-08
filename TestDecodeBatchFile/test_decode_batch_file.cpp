@@ -10,6 +10,6 @@ const int SAMPLE_HEIGHT = 96;
 int main() {
     stcv::BatchFile batch_file(10, 100, SAMPLE_WIDTH, SAMPLE_HEIGHT, 3, "", "test");
     std::vector<stcv::PatchFile> patchs;
-    batch_file.decode_batch("test_3.bin", &patchs);
+    batch_file.decode_batch("test_0.bin", &patchs);
     return 0;
 }

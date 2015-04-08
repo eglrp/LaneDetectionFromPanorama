@@ -334,6 +334,9 @@ int main(int argc, char** argv) {
         char prefix[5];
         int det_num = static_cast<int>(evaluate_result.size());
         for (int d = 0; d < det_num; ++d) {
+            if (!evaluate_result[d].is_used) {
+                continue;
+            }
             cv::Rect roi = evaluate_result[d].rect;
             if (roi.x < 0 || roi.x + roi.width > road.cols
                 || roi.y < 0 || roi.y + roi.height > road.rows) {
