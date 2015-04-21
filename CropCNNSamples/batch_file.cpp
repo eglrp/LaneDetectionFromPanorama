@@ -106,7 +106,7 @@ int BatchFile::add_patch(const cv::Mat& img, const int& type, const cv::Rect& re
     cv::Mat debug_img = cv::Mat(img.rows*3, img.cols, CV_8UC1, patch_file.data);
     cv::imwrite("debug_img.jpg", debug_img);
 #endif
-    if (name.length() >= NAME_MAX_LENGTH) {
+    if (static_cast<int>(name.length()) >= NAME_MAX_LENGTH) {
         memcpy(patch_file.name, name.c_str(), NAME_MAX_LENGTH);
         patch_file.name[NAME_MAX_LENGTH - 1] = '\0';
     }

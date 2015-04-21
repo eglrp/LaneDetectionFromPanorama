@@ -5,19 +5,21 @@
 #include <fstream>
 #include "opencv2/opencv.hpp"
 namespace stcv {
+#ifndef DISALLOW_COPY_AND_ASSIGN
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
 TypeName(const TypeName&); \
 TypeName& operator=(const TypeName&)
+#endif
 const int NAME_MAX_LENGTH = 256;
 struct PatchFile
 {
     PatchFile() {
         data = NULL;
         type = 0;
-        int x = 0;
-        int y = 0;
-        int w = 0;
-        int h = 0;
+        x = 0;
+        y = 0;
+        w = 0;
+        h = 0;
     }
     unsigned char* data;
     char name[NAME_MAX_LENGTH];
@@ -106,12 +108,12 @@ private:
     int write_to_file(const int& index);
     long _total_cnt;
     int _file_num;
+    int _max_patchs_in_memory;
     int _patch_width;
     int _patch_height;
     int _patch_channels;
-    std::string _prefix;
     std::string _file_path;
-    int _max_patchs_in_memory;
+    std::string _prefix;   
     Batch* _p_batch_file;
 
     DISALLOW_COPY_AND_ASSIGN(BatchFile);

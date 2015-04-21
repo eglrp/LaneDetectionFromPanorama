@@ -180,6 +180,8 @@ int main(int argc, char** argv) {
     std::cout << "-----------------------crop cnn samples------------------------" << std::endl;
     std::cout << "---------------------------------------------------------------" << std::endl;
 
+    std::cout << "[WARN] 60110, 60201, 60202, 60203, 60204 not participate in training" << std::endl;
+
     //create negative sample dir
     std::string ns_path = outdir + "negative/";
     if (!directoryExists(ns_path.c_str())) {
@@ -286,6 +288,15 @@ int main(int argc, char** argv) {
             if (mark.sample_marks[m].type_code % 10000 == 9999) {
                 det_result.is_used = false;
             }
+            // note
+            if (mark.sample_marks[m].type_code == 60110
+                || mark.sample_marks[m].type_code == 60201
+                || mark.sample_marks[m].type_code == 60202
+                || mark.sample_marks[m].type_code == 60203
+                || mark.sample_marks[m].type_code == 60204
+                || mark.sample_marks[m].type_code == 69999) {
+                det_result.is_used = false;
+            }
             //if (mark.sample_marks[m].pts.size() <= 5) {
             //    det_result.is_used = false;
             //}
@@ -327,7 +338,6 @@ int main(int argc, char** argv) {
             if (rect.y < 0) {
                 rect.y = 0;
             }
-            det_result.is_true = true;
             det_result.label = mark.sample_marks[m].type_code;
             rect.x -= static_cast<int>((DETECT_EXPAND - 1) * 0.5 * rect.width);
             rect.y -= static_cast<int>((DETECT_EXPAND - 1) * 0.5 * rect.height);
@@ -335,25 +345,6 @@ int main(int argc, char** argv) {
             rect.height = static_cast<int>(rect.height * DETECT_EXPAND);
             det_result.rect = rect;
             det_result.flip = stcv::NONE;
-            //if (road_pts[0].x < center.x) {
-            //    det_result.direction = stcv::LEFT;
-            //}
-            //else {
-            //    det_result.direction = stcv::RIGHT;
-            //    det_result.flip = stcv::HORIZONTAL;
-            //}
-            //if (det_result.label == 60103) {
-            //    det_result.label = 60102;
-            //    det_result.flip = stcv::VERTIACL;
-            //}
-            //else if (det_result.label == 60106) {
-            //    det_result.label = 60105;
-            //    det_result.flip = stcv::VERTIACL;
-            //}
-            //else if (det_result.label == 60118) {
-            //    det_result.label = 60117;
-            //    det_result.flip = stcv::VERTIACL;
-            //}
             groundtruth_vec.push_back(det_result);
         }
         if (groundtruth_vec.size() == 0) {
@@ -413,22 +404,6 @@ int main(int argc, char** argv) {
                 sprintf(buffer, "%sDET_%s_%d_%s_%d_%04d_%04d_%04d_%04d.jpg",
                     ps_path.c_str(), prefix, evaluate_result[d].label, pid.c_str(), d,
                     roi.x, roi.y, roi.width, roi.height);
-                //if (evaluate_result[d].flip == stcv::HORIZONTAL
-                //    && evaluate_result[d].flip == stcv::VERTIACL) {
-                //    cv::Mat flip_img;
-                //    cv::flip(patch, flip_img, -1);
-                //    patch = flip_img;
-                //}
-                //else if (evaluate_result[d].flip == stcv::HORIZONTAL) {
-                //    cv::Mat flip_img;
-                //    cv::flip(patch, flip_img, 1);
-                //    patch = flip_img;
-                //}
-                //else if (evaluate_result[d].flip == stcv::VERTIACL) {
-                //    cv::Mat flip_img;
-                //    cv::flip(patch, flip_img, 0);
-                //    patch = flip_img;
-                //}
                 cv::imwrite(buffer, patch);
 
                 cv::flip(patch, patch, -1);

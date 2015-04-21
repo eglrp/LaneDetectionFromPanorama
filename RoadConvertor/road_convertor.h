@@ -154,14 +154,14 @@ private:
     int plane_inverse_transfrom(const float& device_height_pixels, const float& pitch,
         const cv::Point2f& actual_pt, cv::Point2f* p_virtual_pt);
 
+    float _camera_height;
     float _heading;
     float _pitch;
     float _pitch_back;
     float _roll;
-    float _camera_height;
     float _pixels_per_meter;
-    float _dst_width_meters;
     float _dst_height_meters;
+    float _dst_width_meters;
     int _dst_image_width;
     int _dst_image_height;
     PixelRelation* _p_road_to_pano;
