@@ -51,8 +51,9 @@ void createDir(const char *path)
 const int PANO_WIDTH = 8192;
 const int PANO_HEIGHT = 4096;
 const float OVERLAP = 0.4f;
-const int SAMPLE_WIDTH = 96;
-const int SAMPLE_HEIGHT = 96;
+const int SAMPLE_WIDTH = 48;
+const int SAMPLE_HEIGHT = 48;
+const float DETECT_EXPAND = 1.5f;
 
 void printUsage(void) {
     std::cout << "crop_cnn_samples --imgdir /home/pic_demo --jsondir /home/json \
@@ -85,6 +86,22 @@ int bound_rect(const std::vector<cv::Point>& road_pts, cv::Rect* p_rect) {
     cv::Rect rect(min_x, min_y, max_x - min_x + 1, max_y - min_y + 1);
     *p_rect = rect;
     return 0;
+}
+
+void crop_roi_img(const cv::Mat& src_img, cv::Mat* p_dst_crop) {
+    if (src_img.empty()) {
+        return;
+    }
+    float crop_ratio = 0.25f;
+    cv::Rect roi;
+    roi.x = 0;
+    roi.width = src_img.cols;
+    roi.y = roi.y + static_cast<int>(src_img.rows * crop_ratio);
+    roi.height = static_cast<int>(src_img.rows * (1 - 2 * crop_ratio));
+    cv::Mat dst_img = src_img(roi).clone();
+    int size = (std::max)(dst_img.cols, dst_img.rows);
+    cv::resize(dst_img, dst_img, cv::Size(size, size));
+    *p_dst_crop = dst_img.clone();
 }
 
 int main(int argc, char** argv) {
@@ -269,9 +286,9 @@ int main(int argc, char** argv) {
             if (mark.sample_marks[m].type_code % 10000 == 9999) {
                 det_result.is_used = false;
             }
-            if (mark.sample_marks[m].pts.size() <= 5) {
-                det_result.is_used = false;
-            }
+            //if (mark.sample_marks[m].pts.size() <= 5) {
+            //    det_result.is_used = false;
+            //}
             std::string prefix = pid.substr(0, 10);
             std::vector<cv::Point2i> road_pts;
             ret = batch_convertor.pts_pano_to_road(prefix, PANO_WIDTH, PANO_HEIGHT,
@@ -312,18 +329,42 @@ int main(int argc, char** argv) {
             }
             det_result.is_true = true;
             det_result.label = mark.sample_marks[m].type_code;
+            rect.x -= static_cast<int>((DETECT_EXPAND - 1) * 0.5 * rect.width);
+            rect.y -= static_cast<int>((DETECT_EXPAND - 1) * 0.5 * rect.height);
+            rect.width = static_cast<int>(rect.width * DETECT_EXPAND);
+            rect.height = static_cast<int>(rect.height * DETECT_EXPAND);
             det_result.rect = rect;
-            if (road_pts[0].x < center.x) {
-                det_result.direction = 0;
-            }
-            else {
-                det_result.direction = 1;
-            }
+            det_result.flip = stcv::NONE;
+            //if (road_pts[0].x < center.x) {
+            //    det_result.direction = stcv::LEFT;
+            //}
+            //else {
+            //    det_result.direction = stcv::RIGHT;
+            //    det_result.flip = stcv::HORIZONTAL;
+            //}
+            //if (det_result.label == 60103) {
+            //    det_result.label = 60102;
+            //    det_result.flip = stcv::VERTIACL;
+            //}
+            //else if (det_result.label == 60106) {
+            //    det_result.label = 60105;
+            //    det_result.flip = stcv::VERTIACL;
+            //}
+            //else if (det_result.label == 60118) {
+            //    det_result.label = 60117;
+            //    det_result.flip = stcv::VERTIACL;
+            //}
             groundtruth_vec.push_back(det_result);
         }
         if (groundtruth_vec.size() == 0) {
             continue;
         }
+#if _DEBUG
+        cv::Mat road_deg = road.clone();
+        for (int g = 0; g < static_cast<int>(groundtruth_vec.size()); ++g) {
+            cv::rectangle(road_deg, groundtruth_vec[g].rect, cv::Scalar(0, 0, 255));
+        }
+#endif
         evaluate.set_groundtruth(groundtruth_vec);
         std::vector<stcv::DetResult> evaluate_result;
         ret = evaluate.evaluate(&evaluate_result);
@@ -342,8 +383,12 @@ int main(int argc, char** argv) {
                 || roi.y < 0 || roi.y + roi.height > road.rows) {
                 continue;
             }
-            cv::Mat patch = road(roi);
-            if (evaluate_result[d].is_true && evaluate_result[d].is_used) {
+            cv::Mat patch = road(roi).clone();
+#if _DEBUG
+            cv::Mat patch_det = patch.clone();
+            cv::rectangle(road_deg, roi, cv::Scalar(0, 255, 0));
+#endif
+            if (evaluate_result[d].is_true) {
                 strcpy(prefix, "TP");
                 // extend twice
                 int half_roi_width = static_cast<int>(roi.width * 0.5 + 0.5);
@@ -355,22 +400,46 @@ int main(int argc, char** argv) {
                 roi.height =
                     roi.y + 2 * roi.height < road.rows ? 2 * roi.height : road.rows - 1 - roi.y;
                 patch = road(roi);
-
+                crop_roi_img(patch, &patch);
+#if _DEBUG
+                cv::Rect deb_rect;
+                deb_rect.x = static_cast<int>(patch.cols * 0.25);
+                deb_rect.y = static_cast<int>(patch.rows * 0.25);
+                deb_rect.width = static_cast<int>(patch.cols * 0.5);
+                deb_rect.height = static_cast<int>(patch.rows * 0.5);
+                cv::Mat deb_img = patch(deb_rect);
+#endif
                 char buffer[256];
                 sprintf(buffer, "%sDET_%s_%d_%s_%d_%04d_%04d_%04d_%04d.jpg",
                     ps_path.c_str(), prefix, evaluate_result[d].label, pid.c_str(), d,
                     roi.x, roi.y, roi.width, roi.height);
-                if (evaluate_result[d].direction == 0) {
-                    cv::imwrite(buffer, patch);
-                }
-                else {
-                    cv::Mat flip_img;
-                    cv::flip(patch, flip_img, 1);
-                    cv::imwrite(buffer, flip_img);
-                }
+                //if (evaluate_result[d].flip == stcv::HORIZONTAL
+                //    && evaluate_result[d].flip == stcv::VERTIACL) {
+                //    cv::Mat flip_img;
+                //    cv::flip(patch, flip_img, -1);
+                //    patch = flip_img;
+                //}
+                //else if (evaluate_result[d].flip == stcv::HORIZONTAL) {
+                //    cv::Mat flip_img;
+                //    cv::flip(patch, flip_img, 1);
+                //    patch = flip_img;
+                //}
+                //else if (evaluate_result[d].flip == stcv::VERTIACL) {
+                //    cv::Mat flip_img;
+                //    cv::flip(patch, flip_img, 0);
+                //    patch = flip_img;
+                //}
+                cv::imwrite(buffer, patch);
+
+                cv::flip(patch, patch, -1);
+                sprintf(buffer, "%sDET_%s_%d_%s_%d_%04d_%04d_%04d_%04d_r.jpg",
+                    ps_path.c_str(), prefix, evaluate_result[d].label, pid.c_str(), d,
+                    roi.x, roi.y, roi.width, roi.height);
+                cv::imwrite(buffer, patch);
             }
             else {
                 strcpy(prefix, "FP");
+                crop_roi_img(patch, &patch);
                 cv::resize(patch, patch, cv::Size(SAMPLE_WIDTH, SAMPLE_HEIGHT));
 
                 char buffer[256];

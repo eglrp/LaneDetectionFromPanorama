@@ -172,7 +172,18 @@ int BatchFile::decode_batch(const std::string& batch_file, std::vector<PatchFile
 #if 1
         cv::Mat debug_img
             = cv::Mat(_patch_height * _patch_channels, _patch_width, CV_8UC1, patch_file.data);
-        cv::imwrite(patch_file.name, debug_img);
+        cv::Mat merge_img = cv::Mat(_patch_height, _patch_width, CV_8UC3);
+        for (int y = 0; y < _patch_height; ++y) {
+            const uchar* ptr_b = debug_img.ptr<uchar>(y);
+            const uchar* ptr_g = debug_img.ptr<uchar>(y + _patch_height);
+            const uchar* ptr_r = debug_img.ptr<uchar>(y + _patch_height * 2);
+            for (int x = 0; x < _patch_width; ++x) {
+                merge_img.data[y*merge_img.step + x*merge_img.channels() + 0] = ptr_b[x];
+                merge_img.data[y*merge_img.step + x*merge_img.channels() + 1] = ptr_g[x];
+                merge_img.data[y*merge_img.step + x*merge_img.channels() + 2] = ptr_r[x];
+            }
+        }
+        cv::imwrite(patch_file.name, merge_img);
 #endif
     }
     return 0;

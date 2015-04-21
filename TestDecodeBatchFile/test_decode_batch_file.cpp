@@ -5,8 +5,8 @@
 //
 #include <vector>
 #include "../CropCNNSamples/batch_file.h"
-const int SAMPLE_WIDTH = 96;
-const int SAMPLE_HEIGHT = 96;
+const int SAMPLE_WIDTH = 48;
+const int SAMPLE_HEIGHT = 48;
 int main() {
     stcv::BatchFile batch_file(10, 100, SAMPLE_WIDTH, SAMPLE_HEIGHT, 3, "", "test");
     std::vector<stcv::PatchFile> patchs;

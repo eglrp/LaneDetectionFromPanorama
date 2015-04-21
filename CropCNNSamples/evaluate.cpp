@@ -55,6 +55,15 @@ void Evaluate::is_overlap(const cv::Rect& rect1, const cv::Rect& rect2, bool* p_
     }
 }
 
+void Evaluate::cal_overlap(const cv::Rect& rect1, const cv::Rect& rect2, float* p_overlap_ratio) {
+    cv::Rect inter_rect = rect1 & rect2;
+    cv::Rect union_rect = rect1 | rect2;
+    if (union_rect.area() == 0) {
+        *p_overlap_ratio = 0;
+    }
+    *p_overlap_ratio = static_cast<float>(inter_rect.area()) / union_rect.area();
+}
+
 int Evaluate::load_groundtruth(const std::string& file_name, const float& extend_ratio) {
     std::vector<DetResult> rects;
     int ret = parse_txt(file_name, &rects);
@@ -111,13 +120,23 @@ int Evaluate::evaluate(std::vector<DetResult>* p_result) {
                 (*p_result)[i].is_used = _groundtruth[j].is_used;
                 (*p_result)[i].label = _groundtruth[j].label;
                 (*p_result)[i].direction = _groundtruth[j].direction;
+                (*p_result)[i].flip = _groundtruth[j].flip;
                 break;
             }
             else {
+                float overlap_ratio;
+                cal_overlap((*p_result)[i].rect, _groundtruth[j].rect, &overlap_ratio);
+                if (overlap_ratio > 0.1) {
+                    (*p_result)[i].is_used = false;
+                }
+                else {
+                    (*p_result)[i].is_used = true;
+                }
                 (*p_result)[i].is_true = false;
-                (*p_result)[i].is_used = _groundtruth[j].is_used;
+                //(*p_result)[i].is_used = _groundtruth[j].is_used;
                 (*p_result)[i].label = 0;
                 (*p_result)[i].direction = _groundtruth[j].direction;
+                (*p_result)[i].flip = _groundtruth[j].flip;
             }
         }
     }
