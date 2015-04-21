@@ -45,14 +45,12 @@ int JsonIO::parse_json(const std::string& json, JsonStruct* p_mark) {
             std::string pid = root["PANO_ID"].asString();
             const Json::Value image_rects = root["RECT_VECTOR"];
             p_mark->sample_marks.resize(image_rects.size());
-            for (int i = 0; i < (int)image_rects.size(); i++)
-            {
+            for (int i = 0; i < (int)image_rects.size(); i++) {
                 std::string str_type = image_rects[i]["TYPE"].asString();
                 int nitem = image_rects[i]["ITEM"].asInt();
 
                 std::string shape = image_rects[i]["SHAPE"].asString();
-                if (shape == "RECT")
-                {
+                if (shape == "RECT") {
                     std::string pos = image_rects[i]["RECT"].asString();
                     cv::Point pt1;
                     cv::Point pt2;
@@ -65,9 +63,12 @@ int JsonIO::parse_json(const std::string& json, JsonStruct* p_mark) {
                     sample.pts.push_back(pt1);
                     sample.pts.push_back(pt2);
 
-                    if (!image_rects[i]["COMMENT"].isNull())
-                    {
+                    if (!image_rects[i]["COMMENT"].isNull()) {
                         sample.comment = image_rects[i]["COMMENT"].asString();
+                    }
+
+                    if (!image_rects[i]["TOOL_IMPORT"].isNull()) {
+                        sample.is_tool_import = image_rects[i]["TOOL_IMPORT"].asBool();
                     }
 
                     p_mark->sample_marks[i] = sample;
@@ -98,6 +99,10 @@ int JsonIO::parse_json(const std::string& json, JsonStruct* p_mark) {
                         if (!image_rects[i]["COMMENT"].isNull())
                         {
                             sample.comment = image_rects[i]["COMMENT"].asString();
+                        }
+
+                        if (!image_rects[i]["TOOL_IMPORT"].isNull()) {
+                            sample.is_tool_import = image_rects[i]["TOOL_IMPORT"].asBool();
                         }
 
                         p_mark->sample_marks[i] = sample;
@@ -134,6 +139,7 @@ int JsonIO::generate_json(const JsonStruct& mark, std::string* p_json) {
         item["ITEM"] = mark.sample_marks[i].type_code;
         item["POINT_NUM"] = static_cast<int>(mark.sample_marks[i].pts.size());
         item["TYPE"] = "";
+        item["TOOL_IMPORT"] = mark.sample_marks[i].is_tool_import;
         if (mark.sample_marks[i].graph == RECTANGLE) {
             item["SHAPE"] = "RECT";
             if (mark.sample_marks[i].pts.size() != 2) {

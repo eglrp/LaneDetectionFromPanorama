@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include "opencv2/opencv.hpp"
-const int VERSION = 1001;
+const int VERSION = 1002;
 namespace stcv {
 namespace json_io {
 /// \class  JsonIO
@@ -46,11 +46,16 @@ public:
     /// \author Houwenbo
     /// \date   2015/3/17
     struct SampleMark {
+        SampleMark() {
+            type_code = 0;
+            is_tool_import = false;
+        }
         std::string pid;
         int type_code;
         GraphicType graph;
         std::vector<cv::Point> pts;
         std::string comment;
+        bool is_tool_import;
     };
 
     /// \struct JsonStruct
