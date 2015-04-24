@@ -50,10 +50,11 @@ void createDir(const char *path)
 
 const int PANO_WIDTH = 8192;
 const int PANO_HEIGHT = 4096;
-const float OVERLAP = 0.4f;
+const float OVERLAP = 0.7f;
 const int SAMPLE_WIDTH = 48;
 const int SAMPLE_HEIGHT = 48;
 const float DETECT_EXPAND = 1.5f;
+const float USE_SAMPLE_LENGTH_RANGE = 50.0f;
 
 void printUsage(void) {
     std::cout << "crop_cnn_samples --imgdir /home/pic_demo --jsondir /home/json \
@@ -181,7 +182,7 @@ int main(int argc, char** argv) {
     std::cout << "---------------------------------------------------------------" << std::endl;
 
     std::cout << "[WARN] 60110, 60201, 60202, 60203, 60204 not participate in training" << std::endl;
-
+    std::cout << "[WARN] 68001 and 65999, use all samples" << std::endl;
     //create negative sample dir
     std::string ns_path = outdir + "negative/";
     if (!directoryExists(ns_path.c_str())) {
@@ -231,6 +232,11 @@ int main(int argc, char** argv) {
         std::cout << "[ERROR] Can not open image list! " << list_name << std::endl;
         return -1;
     }
+
+    float min_x_range = 0.5f * dst_length_meters * pixels_per_meter
+        - USE_SAMPLE_LENGTH_RANGE * pixels_per_meter;
+    float max_x_range = 0.5f * dst_length_meters * pixels_per_meter
+        + USE_SAMPLE_LENGTH_RANGE * pixels_per_meter;
 
     stcv::Evaluate evaluate(OVERLAP);
     stcv::BatchFile batch_file(10, 100, SAMPLE_WIDTH, SAMPLE_HEIGHT, 3, ns_path, "test");
@@ -297,9 +303,15 @@ int main(int argc, char** argv) {
                 || mark.sample_marks[m].type_code == 69999) {
                 det_result.is_used = false;
             }
-            //if (mark.sample_marks[m].pts.size() <= 5) {
-            //    det_result.is_used = false;
-            //}
+            if (mark.sample_marks[m].pts.size() <= 5) {
+                det_result.is_used = false;
+            }
+            // note: 68001, 65999 use all samples
+            if (mark.sample_marks[m].type_code == 68001
+                || mark.sample_marks[m].type_code == 65999) {
+                det_result.is_used = true;
+            }
+
             std::string prefix = pid.substr(0, 10);
             std::vector<cv::Point2i> road_pts;
             ret = batch_convertor.pts_pano_to_road(prefix, PANO_WIDTH, PANO_HEIGHT,
@@ -315,6 +327,10 @@ int main(int argc, char** argv) {
             }
             // create pos samples
             if (rect.width <= 30 || rect.height <= 30) {
+                det_result.is_used = false;
+            }
+            // remove samples not within the length range
+            if (rect.x < min_x_range || rect.x + rect.width > max_x_range) {
                 det_result.is_used = false;
             }
             cv::Point2f center(0.0f, 0.0f);

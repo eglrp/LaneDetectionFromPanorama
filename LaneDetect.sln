@@ -37,6 +37,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UpdateJsonSamples", "Update
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestRoadCvtor", "TestRoadCvtor\TestRoadCvtor.vcxproj", "{1483D565-BB35-4549-AE77-BD56C7BF23F6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Json2TopviewTxt", "Json2TopviewTxt\Json2TopviewTxt.vcxproj", "{DE83F68D-F2DC-4E61-93C2-1BF892C6C2F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -83,6 +85,10 @@ Global
 		{1483D565-BB35-4549-AE77-BD56C7BF23F6}.Debug|Win32.Build.0 = Debug|Win32
 		{1483D565-BB35-4549-AE77-BD56C7BF23F6}.Release|Win32.ActiveCfg = Release|Win32
 		{1483D565-BB35-4549-AE77-BD56C7BF23F6}.Release|Win32.Build.0 = Release|Win32
+		{DE83F68D-F2DC-4E61-93C2-1BF892C6C2F7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE83F68D-F2DC-4E61-93C2-1BF892C6C2F7}.Debug|Win32.Build.0 = Debug|Win32
+		{DE83F68D-F2DC-4E61-93C2-1BF892C6C2F7}.Release|Win32.ActiveCfg = Release|Win32
+		{DE83F68D-F2DC-4E61-93C2-1BF892C6C2F7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

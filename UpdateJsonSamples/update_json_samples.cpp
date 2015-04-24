@@ -12,7 +12,7 @@
 
 const int PANO_WIDTH = 8192;
 const int PANO_HEIGHT = 4096;
-const float MIN_OVERLAP = 0.6f;
+const float MIN_OVERLAP = 0.7f;
 
 void printUsage(void) {
     std::cout << "evaluate --file updatefile.txt --jsondir /home/json \
@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
             continue;
         }
         std::string prefix = pid.substr(0, 10);
-        if (o_code == 0) {
+/*        if (o_code == 0) {
             stcv::json_io::JsonIO::SampleMark sample;
             sample.graph = stcv::json_io::JsonIO::GraphicType::POLYGON;
             sample.is_tool_import = true;
@@ -215,7 +215,7 @@ int main(int argc, char** argv) {
             batch_convertor.pts_road_to_pano(prefix, PANO_WIDTH, PANO_HEIGHT, road_pts, &sample.pts);
             mark.sample_marks.push_back(sample);
         }
-        else {
+        else */{
             bool isfound = false;
             for (int m = 0; m < static_cast<int>(mark.sample_marks.size()); ++m) {
                 std::vector<cv::Point2i> road_pts;
